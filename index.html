@@ -1,30 +1,112 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Iris Edibles - Klang</title>
-<style>
-body{background:#111;color:white;font-family:sans-serif;margin:0;padding:15px}
-.card{max-width:400px;margin:20px auto;background:#222;border-radius:20px;padding:20px;text-align:center}
-.card img{width:100%;border-radius:15px}
-.btn{display:block;background:#25D366;color:white;padding:14px;border-radius:30px;text-decoration:none;font-weight:bold;margin-top:15px}
-.price{color:#25D366;font-size:22px;font-weight:bold;margin:10px 0}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iris Massage Klang - Professional Relaxation & Wellness</title>
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --accent-color: #25D366;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .landing-container {
+            width: 100%;
+            max-width: 440px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+            overflow: hidden;
+            text-align: center;
+            border: 1px solid #333;
+        }
+        .hero-image {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4/5;
+            object-fit: cover;
+            display: block;
+        }
+        .content {
+            padding: 24px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .location {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        .description {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        .whatsapp-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 14px 24px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+        }
+        .whatsapp-btn:hover {
+            background-color: #20ba5a;
+            transform: translateY(-2px);
+        }
+        .footer {
+            margin-top: 16px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
 
-<div class="card">
-<h1>Iris Edibles - Klang</h1>
-<p>Premium Edibles • Klang Valley Delivery</p>
-
-<img src="uploads/your-image.jpg">
-
-<div class="price">Available Now</div>
-<p>DM us on WhatsApp for menu & pricing.<br>Delivery in Klang / Setia Alam / Shah Alam</p>
-
-<a class="btn" href="https://wa.me/601139465648?text=Hi%20Iris%20Edibles%2C%20I%20want%20to%20see%20your%20edibles%20menu">Order on WhatsApp - 601139465648</a>
-<a class="btn" style="background:#333" href="photo-toggle.html">View All Photos</a>
-</div>
+    <div class="landing-container">
+        <img src="uploads/your-image.jpg" alt="Iris Massage Klang" class="hero-image">
+        <div class="content">
+            <h1>Iris Massage Klang</h1>
+            <div class="location">📍 Setia Alam & Klang, Selangor</div>
+            <p class="description">
+                Experience premium professional relaxation, soothing therapeutic massage, and total wellness in a clean, calm, and private environment.
+            </p>
+            
+            <a href="https://wa.me/601139465648?text=Hello%2C%20I%20would%20like%20to%20book%20an%20appointment%20at%20Iris%20Massage%20Klang." 
+               target="_blank" 
+               class="whatsapp-btn">
+                <span>💬 Book via WhatsApp</span>
+            </a>
+            
+            <div class="footer">
+                Professional Services · Strict Privacy · By Appointment
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
