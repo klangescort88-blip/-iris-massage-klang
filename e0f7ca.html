@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Setia Alam - Iris Massage | Admin V3</title>
+<style>
+:root{--bg:#0d0d0d;--card:#1a1a1a;--card2:#212121;--gold:#d9bc82;--green:#2de08a;--red:#e05656}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#eee;font-family:Inter,system-ui,sans-serif;padding:12px;padding-bottom:100px}
+
+.header{background:var(--card);border:1px solid #222;border-radius:16px;padding:14px;display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:18px;line-height:1.1}
+.header h1 i{color:var(--gold);font-style:italic}
+.header .ver{font-size:10px;color:#777;letter-spacing:1px;margin-top:4px}
+.admin-on{background:var(--gold);color:#000;padding:10px 18px;border-radius:999px;font-weight:900;font-size:12px;border:none;display:flex;align-items:center;gap:6px;cursor:pointer}
+
+.stats{background:var(--card);border:1px solid #222;border-radius:999px;padding:8px 14px;display:inline-flex;gap:6px;align-items:center;margin:12px 0;font-size:12px;color:#aaa}
+.stats .dot{width:8px;height:8px;background:var(--green);border-radius:50%}
+
+.filters{display:flex;gap:8px;margin-bottom:12px;overflow:auto}
+.f{padding:10px 18px;border-radius:999px;border:1px solid #2a2a2a;background:#1e1e1e;color:#aaa;font-size:13px;white-space:nowrap;cursor:pointer}
+.f.active{background:#fff;color:#000;font-weight:800}
+
+.search{width:100%;background:#1a1a1a;border:1px solid #222;border-radius:12px;padding:12px 14px;color:#eee;margin-bottom:14px;display:flex;gap:10px;align-items:center}
+.search input{background:transparent;border:none;color:#eee;width:100%;outline:none;font-size:13px}
+
+.card{background:var(--card);border:1px solid #222;border-radius:18px;padding:12px;display:flex;gap:12px;margin-bottom:10px;position:relative;transition:opacity .2s}
+.card.off{opacity:.6}
+.card::before{content:'';position:absolute;left:12px;top:14px;width:10px;height:10px;background:var(--green);border-radius:50%;border:2px solid var(--card);z-index:2}
+.card.off::before{background:#555}
+.thumb{width:80px;height:80px;border-radius:14px;overflow:hidden;background:#111;flex-shrink:0;position:relative;border:1px solid #2a2a2a;margin-left:10px;cursor:pointer}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#222,#111);color:#555;font-size:28px;font-weight:800}
+.thumb .cam{position:absolute;bottom:4px;right:4px;width:24px;height:24px;background:var(--gold);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--card)}
+.thumb input{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+.info{flex:1;min-width:0}
+.toprow{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.name{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.name span{color:#777;font-weight:500;font-size:13px;margin-right:4px}
+.pop{background:var(--gold);color:#000;font-size:9px;font-weight:900;padding:3px 7px;border-radius:99px;margin-left:6px;vertical-align:middle}
+.price{color:var(--gold);font-weight:800;font-size:13px;margin-top:2px}
+.price small{color:#666;font-weight:400;font-size:11px}
+
+.toggle{width:54px;height:30px;background:#3a3a2a;border-radius:999px;position:relative;cursor:pointer;flex-shrink:0}
+.toggle.on{background:var(--gold)}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;background:#fff;border-radius:50%;transition:.2s}
+.toggle.on::after{left:27px}
+.toggle::before{content:'ON';position:absolute;right:8px;top:7px;font-size:9px;font-weight:900;color:#000;opacity:0}
+.toggle.on::before{opacity:1}
+
+.actions{display:flex;gap:6px;margin-top:10px}
+.book{flex:1;background:#fff;color:#000;border:none;border-radius:999px;padding:10px;font-weight:800;font-size:13px;display:flex;justify-content:center;align-items:center;gap:6px;cursor:pointer;font-family:inherit}
+.book b{background:#000;color:#fff;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:14px}
+.iconbtn{width:38px;background:#222;border:1px solid #333;color:#ccc;border-radius:12px;font-size:14px;cursor:pointer;flex-shrink:0}
+.iconbtn:hover{background:#2a2a2a}
+.iconbtn.danger{color:var(--red);border-color:#3a2222}
+
+.panel{background:#141414;border:1px dashed #333;border-radius:12px;padding:12px;margin-bottom:12px}
+.panel label{font-size:10px;color:#999;display:block;margin:6px 0 4px}
+.panel input,.panel select{width:100%;background:#1e1e1e;border:1px solid #333;border-radius:8px;padding:10px;color:#fff;outline:none;font-family:inherit;font-size:13px}
+.panel .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.save{background:var(--gold);color:#000;border:none;width:100%;padding:13px;border-radius:12px;font-weight:900;margin-top:8px;cursor:pointer;font-family:inherit;font-size:13px}
+.save.ghost{background:transparent;border:1px solid #444;color:#ccc}
+.save.danger{background:transparent;border:1px solid var(--red);color:var(--red)}
+.section-title{font-size:11px;color:#999;letter-spacing:1px;margin-bottom:8px;font-weight:700}
+
+.note{background:#141414;border:1px solid #222;border-radius:12px;padding:12px;margin-top:16px;color:#666;font-size:11px;line-height:1.5}
+.stat{position:fixed;bottom:12px;left:12px;right:12px;background:#1e1e1e;border:1px solid var(--gold);color:var(--gold);padding:12px;border-radius:12px;text-align:center;display:none;z-index:99}
+.empty{text-align:center;color:#555;padding:30px;font-size:13px}
+
+.gate{position:fixed;inset:0;background:rgba(0,0,0,.95);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px}
+.gate.hidden{display:none}
+.gate-box{background:var(--card);border:1px solid #333;border-radius:18px;padding:24px;width:100%;max-width:320px;text-align:center}
+.gate-box h2{font-size:18px;margin-bottom:6px}
+.gate-box p{font-size:12px;color:#888;margin-bottom:16px}
+.gate-box input{width:100%;background:#1e1e1e;border:1px solid #333;border-radius:10px;padding:14px;color:#fff;text-align:center;font-size:20px;letter-spacing:8px;margin-bottom:10px;outline:none;font-family:inherit}
+.gate-box button{width:100%;background:var(--gold);color:#000;border:none;border-radius:10px;padding:12px;font-weight:900;cursor:pointer;font-family:inherit}
+.gate-err{color:var(--red);font-size:12px;margin-top:8px;height:14px}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:flex-end;z-index:200}
+.overlay.open{display:flex}
+.sheet{width:100%;background:#181818;border-radius:22px 22px 0 0;padding:20px;max-height:85vh;overflow:auto;border:1px solid #2a2a2a;position:relative}
+.sheet h2{font-size:18px;margin-bottom:6px}
+.sheet label{font-size:10px;color:#999;display:block;margin:10px 0 4px}
+.sheet input,.sheet select{width:100%;background:#1e1e1e;border:1px solid #333;border-radius:8px;padding:12px;color:#fff;outline:none;font-family:inherit;font-size:14px}
+.close{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:#222;border:1px solid #333;color:#fff;cursor:pointer;font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gate-box">
+    <h2>🔒 Admin Access</h2>
+    <p>Enter PIN to continue</p>
+    <input id="pinIn" type="password" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="off">
+    <button onclick="unlock()">Unlock</button>
+    <div class="gate-err" id="pinErr"></div>
+  </div>
+</div>
+
+<div class="header">
+  <div>
+    <h1>Setia Alam — <i>Iris<br>Massage</i></h1>
+    <div class="ver">VERSION 3 • ADMIN</div>
+  </div>
+  <button class="admin-on" onclick="lockNow()">🔒 LOCK</button>
+</div>
+
+<div class="stats"><div class="dot"></div><span id="statTxt">—</span></div>
+
+<div class="panel">
+  <div class="section-title">⚙ PUBLIC SETTINGS</div>
+  <label>Business Hours (customer nampak)</label>
+  <input id="hours" value="12PM - 11PM">
+  <label>WhatsApp Number</label>
+  <input id="wa" value="601139465648" inputmode="tel">
+  <label>Admin PIN</label>
+  <input id="pin" value="1234" inputmode="numeric" maxlength="8">
+  <button class="save" onclick="saveAll()">💾 Save Public Changes</button>
+</div>
+
+<div class="panel">
+  <div class="section-title">➕ ADD STAFF</div>
+  <div class="row2">
+    <div><label>ID</label><input id="nid" placeholder="e.g. 099"></div>
+    <div><label>Name</label><input id="nname" placeholder="e.g. Aisyah"></div>
+    <div><label>Price (MYR)</label><input id="nprice" type="number" value="75" min="1"></div>
+    <div><label>Popular</label>
+      <select id="npop"><option value="0">No</option><option value="1">Yes (RM80)</option></select>
+    </div>
+  </div>
+  <button class="save" onclick="addStaff()">➕ Add Staff</button>
+</div>
+
+<div class="panel">
+  <div class="section-title">💾 BACKUP</div>
+  <div style="display:flex;gap:8px">
+    <button class="save" onclick="exportBackup()" style="margin-top:0">⬇ Export</button>
+    <button class="save ghost" onclick="document.getElementById('impFile').click()" style="margin-top:0">⬆ Import</button>
+  </div>
+  <input type="file" id="impFile" accept="application/json,.json" style="display:none" onchange="importBackup(this)">
+  <button class="save danger" onclick="resetAll()" style="margin-top:8px">⟲ Reset to Defaults</button>
+</div>
+
+<div class="filters">
+  <button class="f active" data-f="all">All</button>
+  <button class="f" data-f="avail">Available</button>
+  <button class="f" data-f="pop">Popular RM80</button>
+</div>
+
+<div class="search">🔍 <input id="q" placeholder="Search ID or name — e.g. O23, Elly..."></div>
+
+<div id="list"></div>
+
+<button class="save" onclick="saveAll()">💾 Save Public Changes</button>
+
+<div class="note">
+  <b style="color:#999">Notes:</b> Tap the photo or 📷 icon to upload a new image (auto-compressed, saved to localStorage).
+  Toggle = availability (OFF staff are hidden from customers).
+  Use ✎ to edit or 🗑 to delete a staff member.
+  Changes sync to the customer page in other tabs instantly.
+  Default PIN is <b style="color:#999">1234</b> — change it above and save.
+</div>
+
+<div class="stat" id="msg"></div>
+
+<div class="overlay" id="editOv">
+  <div class="sheet">
+    <button class="close" onclick="closeEdit()">✕</button>
+    <h2>Edit Staff</h2>
+    <label>ID</label><input id="eid" placeholder="e.g. 099">
+    <label>Name</label><input id="ename" placeholder="e.g. Aisyah">
+    <label>Price (MYR)</label><input id="eprice" type="number" min="1">
+    <label>Popular</label>
+    <select id="epop"><option value="0">No</option><option value="1">Yes (RM80)</option></select>
+    <button class="save" onclick="saveEdit()" style="margin-top:16px">💾 Save Changes</button>
+    <button class="save danger" onclick="deleteFromEdit()">🗑 Delete Staff</button>
+  </div>
+</div>
+
+<script>
+const DEF = [
+  ["023","jessy",75,0],["017","Novi",75,0],["661","Mimi",75,0],["021","acha",75,0],
+  ["012","Elly",80,1],["V1","Sofie",75,0],["016","Caca",75,0],["T22","Wawa",75,0],
+  ["020","Arie",75,0],["675","KK",75,0],["V32","melody",75,0],["011","Sheron",80,1],
+  ["028","Sandra",75,0],["928","Lisa",75,0],["018","Fera",75,0],["601","Lela",75,0],
+  ["V18","Yumi",80,1],["015","Niya",75,0],["C6","Ke",80,1],["T33","Bella",75,0],
+  ["T35","Irin",75,0],["037","nova",75,0],["036","erni",75,0]
+];
+
+const defaults = () => DEF.map(([id,name,price,pop]) => ({
+  id, name, price, popular: !!pop, available: true, photo: null
+}));
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem('iris_v2_data');
+    if(raw){
+      const d = JSON.parse(raw);
+      if(Array.isArray(d)) return d;
+    }
+  }catch(e){ console.warn('Corrupt iris_v2_data, resetting.', e); }
+  return defaults();
+}
+function loadSettings(){
+  try{
+    const raw = localStorage.getItem('iris_v2_settings');
+    if(raw) return JSON.parse(raw) || {};
+  }catch(e){ console.warn('Corrupt settings.', e); }
+  return {};
+}
+function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function cleanWa(v){ return String(v || '').replace(/\D/g,'') || '601139465648'; }
+function fmt(n){ return Number(n || 0).toFixed(2); }
+
+let data = loadData();
+let settings = loadSettings();
+let filter = 'all', search = '', editIdx = -1;
+
+const $ = id => document.getElementById(id);
+
+$('hours').value = settings.hours || localStorage.getItem('iris_hours') || '12PM - 11PM';
+$('wa').value    = settings.wa    || localStorage.getItem('iris_wa')    || '601139465648';
+$('pin').value   = settings.pin   || '1234';
+
+/* ---------- PIN ---------- */
+function unlock(){
+  const entered = $('pinIn').value.trim();
+  const correct = settings.pin || '1234';
+  if(entered === correct){
+    $('gate').classList.add('hidden');
+    $('pinIn').value = '';
+    $('pinErr').textContent = '';
+  } else {
+    $('pinErr').textContent = 'Wrong PIN';
+    $('pinIn').value = '';
+  }
+}
+$('pinIn').addEventListener('keydown', e => { if(e.key === 'Enter') unlock(); });
+function lockNow(){
+  if(!confirm('Lock admin panel?')) return;
+  $('gate').classList.remove('hidden');
+  $('pinIn').focus();
+}
+
+/* ---------- persistence ---------- */
+function persistData(){
+  try{ localStorage.setItem('iris_v2_data', JSON.stringify(data)); return true; }
+  catch(e){ return false; }
+}
+
+/* ---------- photo ---------- */
+function compress(file, cb){
+  const r = new FileReader();
+  r.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      const max = 400;
+      let w = img.width, h = img.height;
+      if(w > h){ if(w > max){ h *= max / w; w = max; } }
+      else     { if(h > max){ w *= max / h; h = max; } }
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      cb(c.toDataURL('image/jpeg', 0.72));
+    };
+    img.onerror = () => alert('Could not read image.');
+    img.src = e.target.result;
+  };
+  r.onerror = () => alert('Could not read file.');
+  r.readAsDataURL(file);
+}
+window.up = (inp, idx) => {
+  const f = inp.files[0];
+  inp.value = '';
+  if(!f) return;
+  if(f.size > 8 * 1024 * 1024){ alert('File >8MB. Please pick a smaller image.'); return; }
+  compress(f, url => {
+    const prev = data[idx].photo;
+    data[idx].photo = url;
+    if(!persistData()){
+      data[idx].photo = prev;
+      show('❌ Storage full — remove other photos first');
+      return;
+    }
+    show('✅ Photo updated for ' + data[idx].name);
+    render();
+  });
+};
+
+/* ---------- toggles / book ---------- */
+window.tog = i => {
+  data[i].available = !data[i].available;
+  if(!persistData()){
+    data[i].available = !data[i].available;
+    show('❌ Storage full — could not save');
+    return;
+  }
+  render();
+  show(data[i].name + ' ' + (data[i].available ? 'ON' : 'OFF'));
+};
+window.book = i => {
+  const t = data[i];
+  const wa  = cleanWa($('wa').value);
+  const hrs = $('hours').value.trim() || '12PM - 11PM';
+  const msg = encodeURIComponent(`Hi Iris Massage Setia Alam (${hrs}), I want to book ${t.id} ${t.name} MYR${fmt(t.price)} 60min`);
+  window.open(`https://wa.me/${wa}?text=${msg}`, '_blank');
+};
+
+/* ---------- add ---------- */
+window.addStaff = () => {
+  const id = $('nid').value.trim();
+  const name = $('nname').value.trim();
+  const price = parseFloat($('nprice').value);
+  const pop = $('npop').value === '1';
+  if(!id || !name){ show('❌ ID and name required'); return; }
+  if(!price || price <= 0){ show('❌ Valid price required'); return; }
+  if(data.some(d => d.id.toLowerCase() === id.toLowerCase())){ show('❌ ID "' + id + '" already exists'); return; }
+  data.push({ id, name, price, popular: pop, available: true, photo: null });
+  if(!persistData()){ data.pop(); show('❌ Storage full — could not save'); return; }
+  $('nid').value = ''; $('nname').value = ''; $('nprice').value = '75'; $('npop').value = '0';
+  render();
+  show('➕ Added ' + name);
+};
+
+/* ---------- edit ---------- */
+window.openEdit = idx => {
+  editIdx = idx;
+  const t = data[idx];
+  $('eid').value = t.id; $('ename').value = t.name;
+  $('eprice').value = t.price; $('epop').value = t.popular ? '1' : '0';
+  $('editOv').classList.add('open');
+};
+window.closeEdit = () => { $('editOv').classList.remove('open'); editIdx = -1; };
+window.saveEdit = () => {
+  if(editIdx < 0) return;
+  const t = data[editIdx];
+  const id = $('eid').value.trim();
+  const name = $('ename').value.trim();
+  const price = parseFloat($('eprice').value);
+  const pop = $('epop').value === '1';
+  if(!id || !name){ show('❌ ID and name required'); return; }
+  if(!price || price <= 0){ show('❌ Valid price required'); return; }
+  if(data.some((d,i) => i !== editIdx && d.id.toLowerCase() === id.toLowerCase())){
+    show('❌ ID "' + id + '" already exists'); return;
+  }
+  const prev = { id: t.id, name: t.name, price: t.price, popular: t.popular };
+  t.id = id; t.name = name; t.price = price; t.popular = pop;
+  if(!persistData()){ Object.assign(t, prev); show('❌ Storage full — could not save'); return; }
+  closeEdit();
+  render();
+  show('✅ Updated ' + name);
+};
+window.deleteByIdx = idx => {
+  const t = data[idx];
+  if(!t) return;
+  if(!confirm(`Delete ${t.id} ${t.name}? This cannot be undone.`)) return;
+  const prev = data.slice();
+  data.splice(idx, 1);
+  if(!persistData()){ data = prev; show('❌ Storage full — could not save'); return; }
+  render();
+  show('🗑 Deleted ' + t.name);
+};
+window.deleteFromEdit = () => {
+  if(editIdx < 0) return;
+  const idx = editIdx;
+  closeEdit();
+  deleteByIdx(idx);
+};
+
+/* ---------- backup ---------- */
+window.exportBackup = () => {
+  const payload = { version: 3, exported: new Date().toISOString(), data, settings };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const d = new Date();
+  const stamp = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}`;
+  a.href = url;
+  a.download = `iris-backup-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  show('⬇ Backup downloaded');
+};
+window.importBackup = input => {
+  const f = input.files[0];
+  input.value = '';
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = e => {
+    let parsed;
+    try { parsed = JSON.parse(e.target.result); }
+    catch(err){ alert('Invalid JSON file.'); return; }
+    if(!parsed || !Array.isArray(parsed.data)){ alert('Invalid backup: missing "data" array.'); return; }
+    if(!confirm(`Import ${parsed.data.length} staff and settings? This will OVERWRITE current data.`)) return;
+
+    const newData = parsed.data.map(t => ({
+      id: String(t.id ?? '').trim(),
+      name: String(t.name ?? '').trim(),
+      price: parseFloat(t.price) || 75,
+      popular: !!t.popular,
+      available: t.available !== false,
+      photo: typeof t.photo === 'string' ? t.photo : null
+    })).filter(t => t.id && t.name);
+    if(!newData.length){ alert('No valid staff found in file.'); return; }
+
+    const prevData = data, prevSettings = settings;
+    data = newData;
+    if(parsed.settings && typeof parsed.settings === 'object'){
+      settings = {
+        hours: parsed.settings.hours || settings.hours,
+        wa:    parsed.settings.wa    || settings.wa,
+        pin:   parsed.settings.pin   || settings.pin
+      };
+    }
+    if(!persistData()){
+      data = prevData; settings = prevSettings;
+      alert('Storage full — import cancelled.'); return;
+    }
+    try{
+      localStorage.setItem('iris_v2_settings', JSON.stringify(settings));
+      localStorage.setItem('iris_hours', settings.hours || '12PM - 11PM');
+      localStorage.setItem('iris_wa',    settings.wa    || '601139465648');
+    }catch(e){}
+    $('hours').value = settings.hours || $('hours').value;
+    $('wa').value    = settings.wa    || $('wa').value;
+    $('pin').value   = settings.pin   || $('pin').value;
+    render();
+    show('✅ Imported ' + data.length + ' staff');
+  };
+  r.onerror = () => alert('Could not read file.');
+  r.readAsText(f);
+};
+window.resetAll = () => {
+  if(!confirm('Reset staff list to the default 23? Your photos and custom staff will be lost.')) return;
+  const prev = data;
+  data = defaults();
+  if(!persistData()){ data = prev; show('❌ Storage full — reset failed'); return; }
+  render();
+  show('⟲ Reset to defaults');
+};
+
+/* ---------- save settings ---------- */
+window.saveAll = () => {
+  const hours = $('hours').value.trim() || '12PM - 11PM';
+  const wa    = cleanWa($('wa').value);
+  const pin   = $('pin').value.trim() || '1234';
+  settings = { hours, wa, pin };
+  if(!persistData()){ show('❌ Save failed — storage full'); return; }
+  try{
+    localStorage.setItem('iris_v2_settings', JSON.stringify(settings));
+    localStorage.setItem('iris_hours', hours);
+    localStorage.setItem('iris_wa',    wa);
+  }catch(e){ show('❌ Settings save failed'); return; }
+  $('wa').value = wa;
+  render();
+  show('✅ Saved • Hours ' + hours + ' • WA ' + wa);
+};
+
+/* ---------- toast ---------- */
+let toastTimer;
+function show(m){
+  const el = $('msg');
+  el.style.display = 'block';
+  el.textContent = m;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.style.display = 'none', 2800);
+}
+
+/* ---------- render ---------- */
+function render(){
+  let disp = [...data];
+  if(filter === 'avail') disp = disp.filter(d => d.available);
+  if(filter === 'pop')   disp = disp.filter(d => d.popular);
+  if(search){
+    const q = search.toLowerCase();
+    disp = disp.filter(d => d.id.toLowerCase().includes(q) || d.name.toLowerCase().includes(q));
+  }
+
+  const list = $('list');
+  list.innerHTML = '';
+  if(!disp.length){
+    list.innerHTML = '<div class="empty">No staff match this filter.</div>';
+  } else {
+    disp.forEach(t => {
+      const idx = data.indexOf(t);
+      const div = document.createElement('div');
+      div.className = 'card' + (t.available ? '' : ' off');
+      const photoHtml = t.photo
+        ? `<img src="${t.photo}" alt="">`
+        : `<div class="ph">${esc((t.name[0] || '?').toUpperCase())}</div>`;
+      div.innerHTML = `
+        <div class="thumb" title="Tap to change photo">
+          ${photoHtml}
+          <div class="cam">📷</div>
+          <input type="file" accept="image/*" onchange="up(this,${idx})">
+        </div>
+        <div class="info">
+          <div class="toprow">
+            <div class="name"><span>${esc(t.id)}</span> ${esc(t.name)} ${t.popular ? '<span class="pop">POPULAR</span>' : ''}</div>
+            <div class="toggle ${t.available ? 'on' : ''}" onclick="tog(${idx})"></div>
+          </div>
+          <div class="price">MYR ${fmt(t.price)} <small>• 60 min • Setia Alam</small></div>
+          <div class="actions">
+            <button class="book" onclick="book(${idx})"><b>+</b> Book</button>
+            <button class="iconbtn" onclick="openEdit(${idx})" title="Edit">✎</button>
+            <button class="iconbtn danger" onclick="deleteByIdx(${idx})" title="Delete">🗑</button>
+          </div>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  const total = data.length;
+  const avail = data.filter(d => d.available).length;
+  $('statTxt').textContent = `${total} total • ${avail} available • ${total - avail} off`;
+  const allBtn = document.querySelector('.f[data-f="all"]');
+  if(allBtn) allBtn.textContent = `All ${total}`;
+}
+
+/* ---------- wiring ---------- */
+document.querySelectorAll('.f').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.f').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    filter = b.dataset.f;
+    render();
+  });
+});
+$('q').addEventListener('input', e => { search = e.target.value; render(); });
+
+render();
+</script>
+</body>
+</html>
